@@ -1,10 +1,17 @@
 import * as fs from 'fs';
-import * as resolve from 'resolve';
-import { loadTypeScript } from './loadTypescript';
 import { dirname } from 'path';
+import * as resolve from 'resolve';
 import { runInThisContext } from 'vm';
+import { applyBefore } from './applyBefore/apply.before';
+import { loadOptions } from './applyBefore/loadOptions';
+import { loadTypeScript } from './loadTypescript';
+
+const options = loadOptions();
 
 const ts = loadTypeScript('typescript', { folder: process.cwd(), forceConfigLoad: true });
+
+if (options.before) applyBefore(ts, { prepend: options.prepend });
+
 const tscFileName = resolve.sync('typescript/lib/tsc', { basedir: process.cwd() });
 const commandLineTsCode = fs
     .readFileSync(tscFileName, 'utf8')
