@@ -1,7 +1,7 @@
 import { dirname } from 'path';
 import * as ts from 'typescript';
-import { PluginConfig, PluginCreator } from './PluginCreator';
 import { Diagnostic } from 'typescript/lib/tsserverlibrary';
+import { PluginConfig, PluginCreator } from './PluginCreator';
 
 declare module 'typescript' {
     interface CreateProgramOptions {

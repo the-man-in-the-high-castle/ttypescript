@@ -10,7 +10,7 @@ const options = loadOptions();
 
 const ts = loadTypeScript('typescript', { folder: process.cwd(), forceConfigLoad: true });
 
-if (options.before) applyBefore(ts, { prepend: options.prepend });
+if (options.before) applyBefore(ts, options);
 
 const tscFileName = resolve.sync('typescript/lib/tsc', { basedir: process.cwd() });
 const commandLineTsCode = fs

@@ -1,5 +1,11 @@
+export interface CompilerOptions {
+    before: boolean;
+    prepend: boolean;
+    outFileDir?: string;
+}
+
 export function loadOptions() {
-    const options = { before: false, prepend: false };
+    const options: CompilerOptions = { before: false, prepend: false };
 
     if (popArg('--before')) {
         options.before = true;
@@ -8,6 +14,8 @@ export function loadOptions() {
             options.prepend = true;
         }
     }
+    options.outFileDir = popArgValue('--outFileDir');
+
     return options;
 
     function popArg(arg: string): boolean {
@@ -16,5 +24,16 @@ export function loadOptions() {
             return true;
         }
         return false;
+    }
+
+    function popArgValue(arg: string): string | undefined {
+        const index = process.argv.findIndex((a) => a.startsWith(arg));
+
+        if (index >= 0) {
+            const result = process.argv[index + 1];
+            process.argv = process.argv.filter((a, i) => i !== index && i !== index + 1);
+            console.log('ofd', process.argv);
+            return result;
+        }
     }
 }

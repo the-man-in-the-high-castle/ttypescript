@@ -1,8 +1,12 @@
 import * as fs from 'fs';
+import * as path from 'path';
 import * as ts from 'typescript';
 import { es3transformer } from './es3.transformer';
 
-export function applyBefore(tsm: typeof ts, { prepend = false }: { prepend?: boolean } = {}) {
+export function applyBefore(
+    tsm: typeof ts,
+    { prepend = false, outFileDir }: { prepend?: boolean; outFileDir?: string } = {}
+) {
     console.log('applyBefore');
 
     const org_createSolutionBuilderWithWatchHost = tsm.createSolutionBuilderWithWatchHost;
@@ -53,6 +57,9 @@ export function applyBefore(tsm: typeof ts, { prepend = false }: { prepend?: boo
 
     function apply<T extends ts.BuilderProgram>(host: ts.SolutionBuilderHost<T>) {
         if (prepend) applyPrepend(host);
+        if (outFileDir) {
+            applyOutFileDir(host, outFileDir);
+        }
         applyReadFile(host);
     }
 }
@@ -68,6 +75,10 @@ export function applyReadFile(host: { readFile: (fileName: string) => string | u
             return result;
         }
 
+        // if (fileName.endsWith('.json')) {
+        //     console.log('CONFIG:', fileName);
+        // }
+
         return orgReadFile(fileName);
     };
 }
@@ -76,6 +87,25 @@ function applyPrepend<T extends ts.BuilderProgram>(host: ts.SolutionBuilderHost<
     const org_createProgram = host.createProgram;
 
     host.createProgram = (rootNames, options, host, oldProgram, configFileParsingDiagnostics, projectReferences) => {
+        return org_createProgram(
+            rootNames,
+            options,
+            host,
+            oldProgram,
+            configFileParsingDiagnostics,
+            projectReferences?.map((pr) => ({ ...pr, prepend: true }))
+        );
+    };
+}
+
+function applyOutFileDir<T extends ts.BuilderProgram>(host: ts.SolutionBuilderHost<T>, outFileDir: string) {
+    const org_createProgram = host.createProgram;
+
+    host.createProgram = (rootNames, options, host, oldProgram, configFileParsingDiagnostics, projectReferences) => {
+        if (options?.outFile) {
+            const outFile = path.parse(options.outFile);
+            options.outFile = outFileDir + '/' + outFile.base;
+        }
         return org_createProgram(
             rootNames,
             options,

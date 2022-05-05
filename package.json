@@ -8,19 +8,19 @@
         "clean.all": "lerna clean --yes && rm -rf package-lock.json packages/*/package-lock.json node_modules packages/*/lib packages/*/dist",
         "debug": "node --inspect-brk ./node_modules/jest/bin/jest --runInBand --no-cache --no-watchman",
         "postinstall": "lerna bootstrap --hoist",
-        "build": "lerna exec --scope=ttypescript -- tsc",
-        "watch": "lerna exec --scope=ttypescript -- tsc --watch",
+        "build": "lerna exec --scope=@the-man-in-the-high-castle/ttypescript -- tsc",
+        "watch": "lerna exec --scope=@the-man-in-the-high-castle/ttypescript -- tsc --watch",
         "test": "npm run build && jest",
         "test.watch": "npm run build && jest --watch",
-        "publish": "npm test && lerna publish --conventional-commits --yes",
-        "install:global": "npm un -g ttypescript && npm i -g ./packages/ttypescript"
+        "publish": "lerna publish --conventional-commits --yes",
+        "install:global": "npm un -g @the-man-in-the-high-castle/ttypescript && npm i -g ./packages/ttypescript --force"
     },
     "author": "cevek",
     "repository": {
         "type": "git",
-        "url": "https://github.com/cevek/ttypescript.git"
+        "url": "https://github.com/the-man-in-the-high-castle/ttypescript.git"
     },
-    "homepage": "https://github.com/cevek/ttypescript/#readme",
+    "homepage": "https://github.com/the-man-in-the-high-castle/ttypescript/#readme",
     "license": "MIT",
     "devDependencies": {
         "@types/jest": ">=23.3.11",
