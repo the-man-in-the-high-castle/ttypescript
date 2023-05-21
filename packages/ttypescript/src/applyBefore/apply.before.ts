@@ -104,7 +104,7 @@ function applyOutFileDir<T extends ts.BuilderProgram>(host: ts.SolutionBuilderHo
     host.createProgram = (rootNames, options, host, oldProgram, configFileParsingDiagnostics, projectReferences) => {
         if (options?.outFile) {
             const outFile = path.parse(options.outFile);
-            options.outFile = outFileDir + '/' + outFile.base;
+            options.outFile = `${outFileDir}/${outFile.base}`;
         }
         return org_createProgram(
             rootNames,
